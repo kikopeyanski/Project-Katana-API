@@ -12,8 +12,8 @@ module.exports = function (models) {
                     if (err) {
                         return reject(err)
                     }
-
-                    return resolve(courses.docs);
+                    console.log(courses);
+                    return resolve(courses);
                 })
             });
         },

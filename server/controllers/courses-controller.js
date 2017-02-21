@@ -20,7 +20,8 @@ module.exports = function ({data, encryption}) {
             }
         },
         getAllCourses(req, res) {
-            data.getAllCourses().then(result => {
+            data.getAllCourses()
+                .then(result => {
                 res.status(200).json(result);
             });
         },
