@@ -36,14 +36,16 @@ module.exports = function ({data, encryption}) {
             }
 
             let username = req.body.username;
+            let email = req.body.email;
             let password = req.body.password.toString();
             let confirmedPassword = req.body.confirmedPassword.toString();
-            let email = req.body.email;
 
+            //TODO: Uncomment
             if (password.length < 4) {
                 res.status(401).json({ success: false, message: 'Password too short' });
                 return;
             }
+
 
             if (password !== confirmedPassword) {
                 res.status(401).json({ success: false, message: 'Passwords do not match' });

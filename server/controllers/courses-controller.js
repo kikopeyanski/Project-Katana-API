@@ -15,20 +15,22 @@ module.exports = function ({data, encryption}) {
             if (!user) {
                 return res.status(401).json({
                     success: false,
-                    message: 'You must be loged in order to vote'
+                    message: 'You must be loged in order to vote 2'
                 });
             }
         },
         getAllCourses(req, res) {
+            this._validateToken(req, res);
+
             data.getAllCourses()
                 .then(result => {
-                res.status(200).json(result);
-            });
+                    res.status(200).json(result);
+                });
         },
-        createCourse(req,res){
+        createCourse(req, res){
             let body = req.body;
             data.createCourse(body)
-                .then((course)=>{
+                .then((course) => {
                     res.status(200).json(`${course} successfully created `);
                 })
 
@@ -41,9 +43,9 @@ module.exports = function ({data, encryption}) {
             let category = req.body.category;
 
 
-            data.createFact({ title, uploader, img, category })
+            data.createFact({title, uploader, img, category})
                 .then(fact => {
-                    res.json({ isUploaded: true });
+                    res.json({isUploaded: true});
                 });
 
         },
