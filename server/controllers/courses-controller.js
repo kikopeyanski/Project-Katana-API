@@ -7,7 +7,7 @@ module.exports = function ({data, encryption}) {
             if (!token) {
                 return res.status(401).json({
                     success: false,
-                    message: 'You must be loged in order to vote'
+                    message: 'You must be loged in order to use the tool'
                 });
             }
             token = token.substring(1, token.length - 1);
@@ -15,7 +15,7 @@ module.exports = function ({data, encryption}) {
             if (!user) {
                 return res.status(401).json({
                     success: false,
-                    message: 'You must be loged in order to vote 2'
+                    message: 'You must be loged in order to use the tool'
                 });
             }
         },
@@ -25,7 +25,7 @@ module.exports = function ({data, encryption}) {
             data.getAllCourses()
                 .then(result => {
                     res.status(200).json(result);
-                });
+                })
         },
         createCourse(req, res){
             let body = req.body;

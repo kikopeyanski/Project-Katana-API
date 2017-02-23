@@ -24,9 +24,7 @@ module.exports = function ({app, controllers, passport, auth}) {
 
 
     router
-        .post('/upload', (req, res) => {
-            courses.createCourse(req, res);
-        })
+        .post('/upload', courses.createCourse)
         // .post('/fact/:id/comments', auth.isAuthenticated(), auth.isBlocked(), facts.addComment)
         // .get('/fact/:id/comments', facts.getFactComments)
         // .get('/fact/:id', facts.getFactById)

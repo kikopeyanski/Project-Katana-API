@@ -4,9 +4,10 @@ const jwt = require('jsonwebtoken');
 module.exports = function ({data, encryption}) {
     return {
         login(req, res, next) {
+
             let username = req.body.username;
             let password = req.body.password;
-           
+
             data.getByUsername(username)
                 .then(user => {
                     if (user === null || !user.authenticate(password)) {
@@ -30,6 +31,8 @@ module.exports = function ({data, encryption}) {
 
         },
         register(req, res) {
+
+
             if (req.body === null || typeof (req.body) === 'undefined') {
                 res.status(401).json({ success: false, message: 'request body is empty' });
                 return;
