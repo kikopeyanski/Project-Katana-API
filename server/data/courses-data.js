@@ -20,10 +20,13 @@ module.exports = function (models) {
         createCourse: function (body) {
             return new Promise((resolve, reject) => {
                 let courseName = body.name;
-
+                let startDate = body.startDate;
+                let endDate = body.endDate;
 
                 const course = new Course({
-                    name: courseName
+                    name: courseName,
+                    startDate: startDate,
+                    endDate: endDate
                 });
 
                 course.save((err) => {

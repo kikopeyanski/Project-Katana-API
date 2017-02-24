@@ -43,7 +43,7 @@ module.exports = function ({data, encryption}) {
             let password = req.body.password.toString();
             let confirmedPassword = req.body.confirmedPassword.toString();
 
-            //TODO: Uncomment
+
             if (password.length < 4) {
                 res.status(401).json({ success: false, message: 'Password too short' });
                 return;
