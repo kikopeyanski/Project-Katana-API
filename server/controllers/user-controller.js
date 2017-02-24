@@ -65,11 +65,14 @@ module.exports = function ({data, encryption}) {
                     });
                 });
         },
-        getUserFavorites(req, res) {
+        getUserCourses(req, res) {
             let username = req.params.username;
 
-            data.getUserFavorites(username)
-                .then(result => res.status(200).json(result));
+            data.getUserCourses(username)
+                .then((result) => {
+                    console.log(result);
+                    res.status(200).json(result)
+                });
         },
         addFactToFavorites(req, res) {
             let username = req.params.username;
@@ -83,7 +86,7 @@ module.exports = function ({data, encryption}) {
 
             let username = req.body.username;
             let passwordFromReq = req.body.currentPassword;
-         
+
             if (!passwordFromReq) {
                 res.status(401).json({
                     succes: false,

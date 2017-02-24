@@ -52,9 +52,10 @@ const userSchema = new mongoose.Schema({
     roles: [String],
     isBlocked: {
         type: Boolean,
-        defaul: false
+        default: false
     },
-    favoriteFacts: [{}]
+    favoriteFacts: [{}],
+    courses: [String]
 });
 
 

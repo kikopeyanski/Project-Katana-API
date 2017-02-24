@@ -2,7 +2,8 @@
 'use strict';
 
 module.exports = (models) => {
-    const { User } = models;
+    const {User} = models;
+    const {Course} = models;
 
     return {
         getAll() {
@@ -17,7 +18,7 @@ module.exports = (models) => {
         },
         getUserById(userId) {
             return new Promise((resolve, reject) => {
-                User.findOne({ _id: userId }, (err, user) => {
+                User.findOne({_id: userId}, (err, user) => {
                     if (err) {
                         return reject(err);
                     }
@@ -28,7 +29,7 @@ module.exports = (models) => {
         },
         getUserByEmail(email) {
             return new Promise((resolve, reject) => {
-                User.findOne({ email }, (err, user) => {
+                User.findOne({email}, (err, user) => {
                     if (err) {
                         return reject(err);
                     }
@@ -38,7 +39,7 @@ module.exports = (models) => {
         },
         getByUsername(username) {
             return new Promise((resolve, reject) => {
-                User.findOne({ username: username }, (err, user) => {
+                User.findOne({username: username}, (err, user) => {
 
                     if (err) {
                         return reject(err);
@@ -74,13 +75,22 @@ module.exports = (models) => {
                     user.save();
                 });
         },
-        getUserFavorites(username) {
+        getUserCourses(username) {
             return new Promise((resolve, reject) => {
                 this.getByUsername(username)
                     .then(result => {
-                        resolve(result.favoriteFacts);
+                        let coursesIds = [];
+                        result.courses.forEach(function (courseId) {
+                            coursesIds.push(courseId);
+                        });
+                        Course.find({'_id': {$in: coursesIds}}, (err, courses) => {
+                            console.log('test', courses);
+                            resolve(courses);
+                        });
                     });
+
             });
+
         },
         uploadAvatar(username, img, password) {
             return new Promise((resolve, reject) => {
@@ -90,7 +100,7 @@ module.exports = (models) => {
                         if (passHashFromReq !== user.passHash) {
                             return reject();
                         }
-                       
+
                         user.avatar = img;
                         user.save();
                         resolve(user);
@@ -112,7 +122,7 @@ module.exports = (models) => {
                     .then(([userFromId, userFromMail]) => {
                         if (userFromMail) {
                             reject(userFromId);
-                        }                     
+                        }
 
                         userFromId.passHash = info.passHash || userFromId.passHash;
                         userFromId.email = info.email || userFromId.email;
