@@ -16,21 +16,18 @@ let courseSchema = new mongoose.Schema({
     },
     endDate: {
         type: Date,
-        require: true,
+        required: true,
         default: Date.now()
     },
     homework: {
-        type: {
+        type: [{
             name: {
                 type: String,
-                require: true
-            },
-            endDate: {
-                type: Date,
                 required: true
             }
-        },
-        require: false
+        }],
+        required: false,
+        default: []
     }
 });
 

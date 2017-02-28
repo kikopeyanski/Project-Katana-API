@@ -12,7 +12,6 @@ module.exports = function (models) {
                     if (err) {
                         return reject(err)
                     }
-                    console.log(courses);
                     return resolve(courses);
                 })
             });
@@ -22,11 +21,13 @@ module.exports = function (models) {
                 let courseName = body.name;
                 let startDate = body.startDate;
                 let endDate = body.endDate;
+                let homework = body.homework;
 
                 const course = new Course({
                     name: courseName,
                     startDate: startDate,
-                    endDate: endDate
+                    endDate: endDate,
+                    homework: homework
                 });
 
                 course.save((err) => {
@@ -37,6 +38,14 @@ module.exports = function (models) {
                     resolve(courseName);
                 })
             })
+        },
+        getCourseById: function (id) {
+            return new Promise((resolve, reject) => {
+                Course.findOne({_id: id}, (err, course) => {
+                    return resolve(course);
+                })
+            })
         }
+
     }
 };

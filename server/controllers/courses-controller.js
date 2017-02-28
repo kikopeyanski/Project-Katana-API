@@ -34,24 +34,24 @@ module.exports = function ({data, encryption}) {
                     res.status(200).json(`${course} successfully created `);
                 })
 
-        },
-        uploadFact(req, res, img) {
-            this._validateToken(req, res);
-
-            let uploader = req.body.username;
-            let title = req.body.title;
-            let category = req.body.category;
-
-
-            data.createFact({title, uploader, img, category})
-                .then(fact => {
-                    res.json({isUploaded: true});
-                });
-
-        },
-        getFactById(req, res) {
+         },
+        // uploadFact(req, res, img) {
+        //     this._validateToken(req, res);
+        //
+        //     let uploader = req.body.username;
+        //     let title = req.body.title;
+        //     let category = req.body.category;
+        //
+        //
+        //     data.createFact({title, uploader, img, category})
+        //         .then(fact => {
+        //             res.json({isUploaded: true});
+        //         });
+        //
+        // },
+        getCourseById(req, res) {
             let id = req.params.id;
-            data.getFactById(id).then(result => {
+            data.getCourseById(id).then(result => {
                 res.status(200).json(result);
             });
         },

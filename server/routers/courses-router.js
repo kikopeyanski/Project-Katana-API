@@ -27,7 +27,7 @@ module.exports = function ({app, controllers, passport, auth}) {
         .post('/upload', courses.createCourse)
         // .post('/fact/:id/comments', auth.isAuthenticated(), auth.isBlocked(), facts.addComment)
         // .get('/fact/:id/comments', facts.getFactComments)
-        // .get('/fact/:id', facts.getFactById)
+         .get('/course/:id', courses.getCourseById)
         // .put('/fact/:id', auth.isAuthenticated(), auth.isBlocked(), facts.rateFact)
         // .put('/fact/vote/:id', facts.voteForKnowledge)//TODO:Change  rate to vote
         .get('/all', (req, res) => {
