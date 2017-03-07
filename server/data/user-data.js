@@ -68,29 +68,40 @@ module.exports = (models) => {
                 });
             });
         },
-        addFactToFavorites(username, fact) {
-            this.getByUsername(username)
-                .then(user => {
-                    user.favoriteFacts.push(fact);
-                    user.save();
-                });
+        addCourseToUser(username, courseId) {
+            return new Promise((resolve, reject) => {
+                this.getByUsername(username)
+                    .then(user => {
+                        user.courses.push(courseId);
+                        user.save();
+                        resolve(user);
+                    });
+            })
         },
         getUserCourses(username) {
             return new Promise((resolve, reject) => {
                 this.getByUsername(username)
-                    .then(result => {
+                    .then(user => {
                         let coursesIds = [];
-                        result.courses.forEach(function (courseId) {
+                        user.courses.forEach(function (courseId) {
                             coursesIds.push(courseId);
                         });
                         Course.find({'_id': {$in: coursesIds}}, (err, courses) => {
-                            console.log('test', courses);
                             resolve(courses);
                         });
                     });
 
+
             });
 
+        },
+        getUserCalendar(username){
+            return new Promise((resolve, reject) => {
+                this.getByUsername(username)
+                    .then(user => {
+                        resolve(user);
+                    })
+            })
         },
         uploadAvatar(username, img, password) {
             return new Promise((resolve, reject) => {

@@ -55,7 +55,10 @@ const userSchema = new mongoose.Schema({
         default: false
     },
     favoriteFacts: [{}],
-    courses: [String]
+    courses: [{
+        type: String,
+        unique: true
+    }]
 });
 
 

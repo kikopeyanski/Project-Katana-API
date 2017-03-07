@@ -67,18 +67,27 @@ module.exports = function ({data, encryption}) {
         },
         getUserCourses(req, res) {
             let username = req.params.username;
-
+            if (req.user.username != username) {
+                res.status(401).json({
+                    success: false,
+                    message: 'Unauthorized'
+                })
+            }
             data.getUserCourses(username)
                 .then((result) => {
-                    console.log(result);
                     res.status(200).json(result)
                 });
         },
-        addFactToFavorites(req, res) {
+        addCourseToUser(req, res){
             let username = req.params.username;
-            let fact = req.body.fact;
+            let courseId = req.body.id;
 
-            data.addFactToFavorites(username, fact);
+
+            data.addCourseToUser(username, courseId)
+                .then(function () {
+                    res.status(200);
+                })
+
 
         },
         uploadAvatar(req, res, img) {

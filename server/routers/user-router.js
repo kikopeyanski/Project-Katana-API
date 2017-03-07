@@ -24,7 +24,7 @@ module.exports = function ({ app, controllers, passport, auth }) {
     router
         .put('/user/:id', auth.isAuthenticated(), userController.updatePrivateInfo)
         .get('/user/:username/courses', auth.isAuthenticated(), userController.getUserCourses)
-        .post('/user/:username/favorites', auth.isAuthenticated(), userController.addFactToFavorites)
+        .post('/user/:username/courses', userController.addCourseToUser)
         .get('/user/:username/avatar', auth.isAuthenticated(), userController.getAvatar)
         .post('/user/avatar', uploadAvatar.any(), (req, res) => {
             userController.uploadAvatar(req, res, img);

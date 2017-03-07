@@ -24,17 +24,18 @@ module.exports = function ({data, encryption}) {
 
             data.getAllCourses()
                 .then(result => {
-                    res.status(200).json(result);
+                    return res.status(200).json(result);
                 })
         },
         createCourse(req, res){
+
             let body = req.body;
             data.createCourse(body)
                 .then((course) => {
-                    res.status(200).json(`${course} successfully created `);
+                    return res.status(200).json(`${course} successfully created `);
                 })
 
-         },
+        },
         // uploadFact(req, res, img) {
         //     this._validateToken(req, res);
         //
@@ -51,15 +52,20 @@ module.exports = function ({data, encryption}) {
         // },
         getCourseById(req, res) {
             let id = req.params.id;
-            data.getCourseById(id).then(result => {
-                res.status(200).json(result);
-            });
+            let userCourses = req.user.courses;
+
+            data.getCourseById(id, userCourses)
+                .then(result => {
+                    return res.status(200).json(result);
+                });
         },
         getFactComments(req, res) {
             let id = req.params.id;
 
             data.getFactComments(id)
-                .then(result => res.status(200).json(result));
+                .then(result => {
+                    return res.status(200).json(result)
+                });
         },
         addComment(req, res) {
             let id = req.params.id;
@@ -67,7 +73,7 @@ module.exports = function ({data, encryption}) {
 
 
             data.addComment(id, comment);
-            res.json(comment);
+            return res.json(comment);
         },
         rateFact(req, res) {
             let id = req.params.id;

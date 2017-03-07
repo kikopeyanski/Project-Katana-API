@@ -11,17 +11,17 @@ module.exports = function ({data, encryption}) {
             data.getByUsername(username)
                 .then(user => {
                     if (user === null || !user.authenticate(password)) {
-                        res.status(401).json({
+                        return res.status(401).json({
                             succes: 'false',
                             message: 'wrong username or password'
                         });
-                        return;
+
                     }
 
                     let token = jwt.sign(user, 'magicstring', {
                         expiresIn: 7200 // 2 hours in seconds
                     });
-                    res.status(200).json({
+                    return res.status(200).json({
                         success: true,
                         message: `User ${user.username} logged in succesfully`,
                         token: 'JWT ' + token,
@@ -34,8 +34,8 @@ module.exports = function ({data, encryption}) {
 
 
             if (req.body === null || typeof (req.body) === 'undefined') {
-                res.status(401).json({ success: false, message: 'request body is empty' });
-                return;
+                return res.status(401).json({success: false, message: 'request body is empty'});
+
             }
 
             let username = req.body.username;
@@ -45,20 +45,20 @@ module.exports = function ({data, encryption}) {
 
 
             if (password.length < 4) {
-                res.status(401).json({ success: false, message: 'Password too short' });
-                return;
+                return res.status(401).json({success: false, message: 'Password too short'});
+
             }
 
 
             if (password !== confirmedPassword) {
-                res.status(401).json({ success: false, message: 'Passwords do not match' });
-                return;
+                return res.status(401).json({success: false, message: 'Passwords do not match'});
+
             }
 
             let pattern = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
             if (!pattern.test(email)) {
-                res.status(401).json({ success: false, message: 'Email is not valid' });
-                return;
+                return res.status(401).json({success: false, message: 'Email is not valid'});
+
             }
 
             const salt = encryption.generateSalt();
@@ -68,22 +68,22 @@ module.exports = function ({data, encryption}) {
                 .then(([existringUser, existingEmail]) => {
 
                     if (existringUser) {
-                        res.status(409).json({
+                        return res.status(409).json({
                             success: false,
                             message: 'Username already exist!'
                         });
-                        return;
+
                     } else if (existingEmail) {
-                        res.status(409).json({
+                        return res.status(409).json({
                             success: false,
                             message: 'Email already exist!'
                         });
-                        return;
+
                     }
 
                     data.createUser(username, passHash, email, salt)
                         .then(() => {
-                            res.status(201).json({
+                            return res.status(201).json({
                                 success: true,
                                 message: `User ${username} created succesfully`
                             });
@@ -92,14 +92,14 @@ module.exports = function ({data, encryption}) {
         },
         logout(req, res) {
             req.logout();
-            res.status(202).json({
+            return res.status(202).json({
                 succes: true,
                 message: `User ${req.body.username} is logged out succesfully`
             });
         },
         getLoggedUser(req, res) {
             if (!req.user) {
-                return res.status(401).json({
+                return res.status(200).json({
                     success: false,
                     message: 'Please provide token'
                 });

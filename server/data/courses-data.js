@@ -39,11 +39,17 @@ module.exports = function (models) {
                 })
             })
         },
-        getCourseById: function (id) {
+        getCourseById: function (id, userCourses) {
             return new Promise((resolve, reject) => {
+                let result = {};
+                result.course = {};
+
+                result.isSigned = userCourses.indexOf(id) != -1;
+
                 Course.findOne({_id: id}, (err, course) => {
-                    return resolve(course);
-                })
+                    result.course = course;
+                    resolve(result)
+                });
             })
         }
 
