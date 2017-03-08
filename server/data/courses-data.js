@@ -22,12 +22,14 @@ module.exports = function (models) {
                 let startDate = body.startDate;
                 let endDate = body.endDate;
                 let homework = body.homework;
+                let img = body.img;
 
                 const course = new Course({
                     name: courseName,
                     startDate: startDate,
                     endDate: endDate,
-                    homework: homework
+                    homework: homework,
+                    image: img
                 });
 
                 course.save((err) => {

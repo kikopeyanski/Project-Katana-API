@@ -49,12 +49,13 @@ module.exports = (models) => {
                 });
             });
         },
-        createUser(username, passHash, email, salt) {
+        createUser(username, passHash, email, salt,img) {
             let user = new User({
                 username: username,
                 passHash: passHash,
                 email: email,
                 salt: salt,
+                image: img,
                 roles: ['regular']
             });
 

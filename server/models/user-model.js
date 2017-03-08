@@ -41,6 +41,10 @@ const userSchema = new mongoose.Schema({
             message: '{VALUE} is not a valid email!'
         }
     },
+    image: {
+        type: String,
+        required: true
+    },
     salt: {
         type: String,
         required: true

@@ -1,6 +1,6 @@
 'use strict';
 
-module.exports = function ({data, encryption}) {
+module.exports = function ({data, encryption, grid,database}) {
     return {
         _validateToken(req, res) {
             let token = req.headers.authorization;
@@ -28,12 +28,19 @@ module.exports = function ({data, encryption}) {
                 })
         },
         createCourse(req, res){
-
+            let gfs = grid(database.connection.db,database.mongo);
             let body = req.body;
-            data.createCourse(body)
-                .then((course) => {
-                    return res.status(200).json(`${course} successfully created `);
-                })
+            let file = req.file;
+
+            gfs.writeFile({},file.buffer, (_, foundFile) =>{
+                body.img = foundFile._id;
+                data.createCourse(body)
+                    .then((course) => {
+                        return res.status(200).json(`${course} successfully created `);
+                    })
+            });
+
+
 
         },
         // uploadFact(req, res, img) {

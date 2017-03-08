@@ -1,7 +1,7 @@
 'use strict';
 const jwt = require('jsonwebtoken');
 
-module.exports = function ({data, encryption}) {
+module.exports = function ({data, encryption, grid, database}) {
     return {
         login(req, res, next) {
 
@@ -37,58 +37,70 @@ module.exports = function ({data, encryption}) {
                 return res.status(401).json({success: false, message: 'request body is empty'});
 
             }
+            let gfs = grid(database.connection.db, database.mongo);
+            let body = req.body;
 
-            let username = req.body.username;
-            let email = req.body.email;
-            let password = req.body.password.toString();
-            let confirmedPassword = req.body.confirmedPassword.toString();
-
-
-            if (password.length < 4) {
-                return res.status(401).json({success: false, message: 'Password too short'});
-
-            }
+            let username = body.username;
+            let email = body.email;
+            let password = body.password.toString();
+            let confirmedPassword = body.confirmedPassword.toString();
 
 
-            if (password !== confirmedPassword) {
-                return res.status(401).json({success: false, message: 'Passwords do not match'});
+            let file = req.file;
+            let img;
 
-            }
+            gfs.writeFile({}, file.buffer, (_, foundFile) => {
+                img = foundFile._id;
 
-            let pattern = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-            if (!pattern.test(email)) {
-                return res.status(401).json({success: false, message: 'Email is not valid'});
 
-            }
+                if (password.length < 4) {
+                    return res.status(401).json({success: false, message: 'Password too short'});
 
-            const salt = encryption.generateSalt();
-            const passHash = encryption.generateHashedPassword(salt, password);
+                }
 
-            Promise.all([data.getByUsername(username), data.getUserByEmail(email)])
-                .then(([existringUser, existingEmail]) => {
 
-                    if (existringUser) {
-                        return res.status(409).json({
-                            success: false,
-                            message: 'Username already exist!'
-                        });
+                if (password !== confirmedPassword) {
+                    return res.status(401).json({success: false, message: 'Passwords do not match'});
 
-                    } else if (existingEmail) {
-                        return res.status(409).json({
-                            success: false,
-                            message: 'Email already exist!'
-                        });
+                }
 
-                    }
+                let pattern = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+                if (!pattern.test(email)) {
+                    return res.status(401).json({success: false, message: 'Email is not valid'});
 
-                    data.createUser(username, passHash, email, salt)
-                        .then(() => {
-                            return res.status(201).json({
-                                success: true,
-                                message: `User ${username} created succesfully`
+                }
+
+                const salt = encryption.generateSalt();
+                const passHash = encryption.generateHashedPassword(salt, password);
+
+                Promise.all([data.getByUsername(username), data.getUserByEmail(email)])
+                    .then(([existringUser, existingEmail]) => {
+
+                        if (existringUser) {
+                            return res.status(409).json({
+                                success: false,
+                                message: 'Username already exist!'
                             });
-                        });
-                });
+
+                        } else if (existingEmail) {
+                            return res.status(409).json({
+                                success: false,
+                                message: 'Email already exist!'
+                            });
+
+                        }
+
+                        data.createUser(username, passHash, email, salt, img)
+                            .then(() => {
+                                return res.status(201).json({
+                                    success: true,
+                                    message: `User ${username} created succesfully`
+                                });
+                            });
+                    });
+            });
+
+
         },
         logout(req, res) {
             req.logout();
@@ -107,7 +119,7 @@ module.exports = function ({data, encryption}) {
 
             let user = {
                 username: req.user.username,
-                avatar: req.user.avatar,
+                image: req.user.image,
                 _id: req.user._id,
                 roles: req.user.roles,
                 isBlocked: req.user.isBlocked

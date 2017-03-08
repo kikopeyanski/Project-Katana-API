@@ -3,7 +3,7 @@ const multer = require('multer');
 const path = require('path');
 const router = require('express').Router();
 
-module.exports = function ({app, controllers, passport, auth}) {
+module.exports = function ({app, controllers, passport, auth, upload}) {
     const courses = controllers.courses;
     let img = '';
     const storageFact = multer.diskStorage({
@@ -24,7 +24,7 @@ module.exports = function ({app, controllers, passport, auth}) {
 
 
     router
-        .post('/upload', courses.createCourse)
+        .post('/upload',upload.single('image'), courses.createCourse)
         // .post('/fact/:id/comments', auth.isAuthenticated(), auth.isBlocked(), facts.addComment)
         // .get('/fact/:id/comments', facts.getFactComments)
          .get('/course/:id',auth.isAuthenticated(), courses.getCourseById)

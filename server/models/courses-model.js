@@ -9,25 +9,25 @@ let courseSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    startDate: {
-        type: Date,
-        required: true,
-        default: Date.now()
+    color: {
+        type: String,
+        required: false
     },
-    endDate: {
-        type: Date,
-        required: true,
-        default: Date.now()
+    image: {
+        type: String,
+        required: true
     },
-    homework: {
+    lectures: {
         type: [{
-            name: {
-                type: String,
-                required: true
+            name: String,
+            date: Date,
+            startHour: Date,
+            ednHour: Date,
+            homework: {
+                name: String,
+                deadline: Date
             }
-        }],
-        required: false,
-        default: []
+        }]
     }
 });
 
