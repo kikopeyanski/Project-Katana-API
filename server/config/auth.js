@@ -2,7 +2,7 @@ const passport = require('passport');
 
 module.exports = {
     isAuthenticated: (req, res, next) => {
-        return passport.authenticate('jwt', { session: false });
+        return passport.authenticate('jwt', {session: false});
     },
     isBlocked: () =>
         (req, res, next) => {

@@ -15,7 +15,6 @@ module.exports = function ({data, encryption, grid, database}) {
                             succes: 'false',
                             message: 'wrong username or password'
                         });
-
                     }
 
                     let token = jwt.sign(user, 'magicstring', {
@@ -25,7 +24,11 @@ module.exports = function ({data, encryption, grid, database}) {
                         success: true,
                         message: `User ${user.username} logged in succesfully`,
                         token: 'JWT ' + token,
-                        isUserBlocked: user.isBlocked
+                        isUserBlocked: user.isBlocked,
+                        isAdmin: user.roles.indexOf('admin')!=-1,
+                        username: user.username,
+                        image: user.image,
+                        id: user._id
                     });
                 });
 

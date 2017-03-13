@@ -3,8 +3,8 @@ const multer = require('multer');
 const path = require('path');
 const router = require('express').Router();
 
-module.exports = function ({ app, controllers, passport, auth }) {
-    const userController = controllers.user;
+module.exports = function ({app, controllers, passport, auth}) {
+    const user = controllers.user;
     let img = '';
 
     const storageAvatar = multer.diskStorage({
@@ -22,13 +22,13 @@ module.exports = function ({ app, controllers, passport, auth }) {
     });
 
     router
-        .put('/user/:id', auth.isAuthenticated(), userController.updatePrivateInfo)
-        .get('/user/:username/courses', auth.isAuthenticated(), userController.getUserCourses)
-        .post('/user/:username/courses', userController.addCourseToUser)
-        .get('/user/:username/avatar', auth.isAuthenticated(), userController.getAvatar)
-        .post('/user/avatar', uploadAvatar.any(), (req, res) => {
-            userController.uploadAvatar(req, res, img);
-        });
+        .get('/user/:username/courses', auth.isAuthenticated(), user.getUserCourses)
+        .post('/user/:username/courses',user.addCourseToUser);
 
     app.use('/api/users', router);
+    //  .get('/user/:username/avatar', auth.isAuthenticated(), userController.getAvatar)
+    //   .post('/user/avatar', uploadAvatar.any(), (req, res) => {
+    //       userController.uploadAvatar(req, res, img);
+    //   });
+
 };
