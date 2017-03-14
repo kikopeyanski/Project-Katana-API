@@ -53,6 +53,15 @@ module.exports = function (models) {
                     resolve(result)
                 });
             })
+        },
+        addLectureToCourse(id, lecture){
+            return new Promise((resolve, reject) => {
+                Course.findOne({_id: id}, (err, course) => {
+                    course.lectures.push(lecture);
+                    course.save();
+                    resolve('success');
+                })
+            })
         }
 
     }

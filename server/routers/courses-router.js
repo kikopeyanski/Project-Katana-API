@@ -21,6 +21,7 @@ module.exports = function ({app, controllers, passport, auth, upload}) {
 
     router
         .post('/upload', upload.single('image'), courses.createCourse)
+        .put('/course/:id',auth.isAuthenticated(), courses.addLectureToCourse)
         .get('/course/:id', auth.isAuthenticated(), courses.getCourseById)
         .get('/all', auth.isAuthenticated(), courses.getAllCourses);
 

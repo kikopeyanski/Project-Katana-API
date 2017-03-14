@@ -1,6 +1,64 @@
 'use strict';
 const userDataExtractor = require('../utilities/user-data-extractor');
+const moment = require('moment');
 
+let weekdays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+
+// let calendar = [
+//     {
+//         "date": weekdays[moment().get('weekday') - 1],
+//         "start1": moment('14-03-2017 13:00', 'DD-MM-YYYY HH:mm'),
+//         "start2": moment('14-03-2017 13:00', 'DD-MM-YYYY HH:mm'),
+//         "start3": moment('14-03-2017 13:00', 'DD-MM-YYYY HH:mm'),
+//         "end1": moment('14-03-2017 16:00', 'DD-MM-YYYY HH:mm'),
+//         "end2": moment('14-03-2017 16:00', 'DD-MM-YYYY HH:mm'),
+//         "end3": moment('14-03-2017 16:00', 'DD-MM-YYYY HH:mm'),
+//         // "homework1": "12:00",
+//         // "homework2": "12:00",
+//     },
+//     {
+//         "date": weekdays[moment().get('weekday')],
+//         "start1": moment('14-03-2017 13:00', 'DD-MM-YYYY HH:mm'),
+//         "start2": moment('14-03-2017 13:00', 'DD-MM-YYYY HH:mm'),
+//         "start3": moment('14-03-2017 13:00', 'DD-MM-YYYY HH:mm'),
+//         "end1": moment('14-03-2017 16:00', 'DD-MM-YYYY HH:mm'),
+//         "end2": moment('14-03-2017 16:00', 'DD-MM-YYYY HH:mm'),
+//         "end3": moment('14-03-2017 16:00', 'DD-MM-YYYY HH:mm'),
+//         // "homework1": "12:00",
+//         // "homework2": "12:00",
+//     },
+//     {
+//         "date": weekdays[moment().get('weekday') + 1],
+//         "start1": moment('14-03-2017 13:00', 'DD-MM-YYYY HH:mm'),
+//         "start2": moment('14-03-2017 13:00', 'DD-MM-YYYY HH:mm'),
+//         "start3": moment('14-03-2017 13:00', 'DD-MM-YYYY HH:mm'),
+//         "end1": moment('14-03-2017 16:00', 'DD-MM-YYYY HH:mm'),
+//         "end2": moment('14-03-2017 16:00', 'DD-MM-YYYY HH:mm'),
+//         "end3": moment('14-03-2017 16:00', 'DD-MM-YYYY HH:mm'),
+//         // "homework1": "12:00",
+//         // "homework2": "12:00",
+//     }, {
+//         "date": weekdays[moment().get('weekday') + 2],
+//         "start1": moment('14-03-2017 13:00', 'DD-MM-YYYY HH:mm'),
+//         "start2": moment('14-03-2017 13:00', 'DD-MM-YYYY HH:mm'),
+//         "start3": moment('14-03-2017 13:00', 'DD-MM-YYYY HH:mm'),
+//         "end1": moment('14-03-2017 16:00', 'DD-MM-YYYY HH:mm'),
+//         "end2": moment('14-03-2017 16:00', 'DD-MM-YYYY HH:mm'),
+//         "end3": moment('14-03-2017 16:00', 'DD-MM-YYYY HH:mm'),
+//         // "homework1": "12:00",
+//         // "homework2": "12:00",
+//     }, {
+//         "date": weekdays[moment().get('weekday') + 3],
+//         "start1": moment('14-03-2017 13:00', 'DD-MM-YYYY HH:mm'),
+//         "start2": moment('14-03-2017 13:00', 'DD-MM-YYYY HH:mm'),
+//         "start3": moment('14-03-2017 13:00', 'DD-MM-YYYY HH:mm'),
+//         "end1": moment('14-03-2017 16:00', 'DD-MM-YYYY HH:mm'),
+//         "end2": moment('14-03-2017 16:00', 'DD-MM-YYYY HH:mm'),
+//         "end3": moment('14-03-2017 16:00', 'DD-MM-YYYY HH:mm'),
+//         // "homework1": "12:00",
+//         // "homework2": "12:00",
+//     },
+// ];
 
 module.exports = function ({data, encryption}) {
     return {
@@ -21,10 +79,20 @@ module.exports = function ({data, encryption}) {
                 });
             }
         },
+        // _getUserCalendar(username){
+        //     data.getUserCalendar(username);
+        // },
         getUserCourses(req, res) {
             let username = req.params.username;
             let user = userDataExtractor.extractUserData(req);
-
+            let calendar;
+            data.getUserCalendar(username)
+                .then(result => {
+                    data.formatCalendar(result)
+                        .then(result => {
+                            calendar = result;
+                        })
+                });
             if (req.user.username != username) {
                 res.status(401).json({
                     success: false,
@@ -35,7 +103,8 @@ module.exports = function ({data, encryption}) {
                 .then((result) => {
                     res.status(200).json({
                         user: user,
-                        result: result
+                        result: result,
+                        calendar: calendar
                     })
                 });
         },

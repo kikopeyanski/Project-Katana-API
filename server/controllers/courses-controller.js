@@ -58,6 +58,16 @@ module.exports = function ({data, encryption, grid, database}) {
                         });
                 });
         },
+        addLectureToCourse(req, res){
+            let id = req.params.id;
+            let lecture = req.body;
+
+            data.addLectureToCourse(id, lecture)
+                .then(response => {
+                    console.log(response);
+                });
+
+        }
         // getFactComments(req, res) {
         //     let id = req.params.id;
         //

@@ -21,8 +21,8 @@ let courseSchema = new mongoose.Schema({
         type: [{
             name: String,
             date: Date,
-            startHour: Date,
-            ednHour: Date,
+            startHour: String,
+            endHour: String,
             homework: {
                 name: String,
                 deadline: Date

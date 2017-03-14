@@ -1,6 +1,12 @@
 /* globals module, require */
+const moment = require('moment');
+let weekdays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 'use strict';
-
+let getCourseLectures = function (course) {
+    return new Promise((resolve, reject) => {
+        resolve(course.lectures);
+    })
+};
 module.exports = (models) => {
     const {User} = models;
     const {Course} = models;
@@ -49,7 +55,7 @@ module.exports = (models) => {
                 });
             });
         },
-        createUser(username, passHash, email, salt,img) {
+        createUser(username, passHash, email, salt, img) {
             let user = new User({
                 username: username,
                 passHash: passHash,
@@ -96,11 +102,60 @@ module.exports = (models) => {
             });
 
         },
+        formatCalendar(data){
+            return new Promise((resolve, reject) => {
+                let result = [];
+                const fixedDate = '14-03-2017';
+
+                for (let i = 0; i < 5; i++) {
+                    let counter = moment().add(i, 'days');
+                    let tmp = {};
+                    tmp.date = weekdays[moment().get('weekday') + i - 1];
+
+                    let count = 1;
+
+
+                    data.forEach(function (obj) {
+                        if (moment(obj.lecture.date).day() == counter.day()) {
+                            // console.log(obj.lecture.name +
+                            //     ' ' + 'today ' + i);
+
+                            tmp[`start${count}`]
+                                = moment(`${fixedDate} ${obj.lecture.endHour}`, 'DD-MM-YYYY HH:mm').utc() ;
+
+                            tmp[`end${count}`]
+                                = moment(`${fixedDate} ${obj.lecture.startHour}`, 'DD-MM-YYYY HH:mm').utc();
+                            count++;
+                        }
+                    });
+
+                    result.push(tmp);
+                    //todo
+                }
+                resolve(result);
+            })
+        },
         getUserCalendar(username){
             return new Promise((resolve, reject) => {
-                this.getByUsername(username)
-                    .then(user => {
-                        resolve(user);
+                let result = [];
+                this.getUserCourses(username)
+                    .then(courses => {
+                        courses.forEach(function (course) {
+                            getCourseLectures(course)
+                                .then(lectures => {
+                                    lectures.forEach(function (lecture) {
+                                        if (moment(lecture.date).isBetween(moment().day(), moment().add(5, 'days'))) {
+
+                                            result.push({
+                                                lecture: lecture
+                                            });
+                                        }
+                                    })
+                                })
+                        });
+                    })
+                    .then(() => {
+                        resolve(result);
                     })
             })
         },
