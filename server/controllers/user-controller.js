@@ -1,8 +1,6 @@
 'use strict';
 const userDataExtractor = require('../utilities/user-data-extractor');
-const moment = require('moment');
 
-let weekdays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 
 // let calendar = [
 //     {
@@ -79,9 +77,6 @@ module.exports = function ({data, encryption}) {
                 });
             }
         },
-        // _getUserCalendar(username){
-        //     data.getUserCalendar(username);
-        // },
         getUserCourses(req, res) {
             let username = req.params.username;
             let user = userDataExtractor.extractUserData(req);
@@ -92,21 +87,24 @@ module.exports = function ({data, encryption}) {
                         .then(result => {
                             calendar = result;
                         })
-                });
-            if (req.user.username != username) {
-                res.status(401).json({
-                    success: false,
-                    message: 'Unauthorized'
                 })
-            }
-            data.getUserCourses(username)
-                .then((result) => {
-                    res.status(200).json({
-                        user: user,
-                        result: result,
-                        calendar: calendar
-                    })
-                });
+                .then(() => {
+                    if (req.user.username != username) {
+                        res.status(401).json({
+                            success: false,
+                            message: 'Unauthorized'
+                        })
+                    }
+                    data.getUserCourses(username)
+                        .then((result) => {
+                            res.status(200).json({
+                                user: user,
+                                result: result,
+                                calendar: calendar
+                            })
+                        });
+                })
+
         },
         addCourseToUser(req, res){
             console.log('add course');

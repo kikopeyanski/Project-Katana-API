@@ -4,6 +4,13 @@ let weekdays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 'use strict';
 let getCourseLectures = function (course) {
     return new Promise((resolve, reject) => {
+        let homeworkCount = 0;
+        course.lectures.forEach(function (lecture) {
+            if (lecture.homework) {
+                homeworkCount++;
+            }
+        });
+        course.homeworkCount = homeworkCount;
         resolve(course.lectures);
     })
 };
@@ -93,7 +100,45 @@ module.exports = (models) => {
                         user.courses.forEach(function (courseId) {
                             coursesIds.push(courseId);
                         });
+
                         Course.find({'_id': {$in: coursesIds}}, (err, courses) => {
+                            courses.forEach(function (course) {
+                                let homeworkCount = 0;
+                                let soonestHomework = moment().add(30, 'days');
+                                course.lectures.forEach(function (lecture) {
+                                    if (lecture.homework) {
+                                        homeworkCount++;
+
+                                        if (moment(lecture.homework.deadline).isBefore(soonestHomework)
+                                            && moment(lecture.homework.deadline)
+                                                .diff(moment(), 'days') >= 0) {
+                                            soonestHomework = lecture.homework.deadline;
+                                        }
+                                    }
+                                });
+
+                                let daysTillHomework = moment(soonestHomework)
+                                    .diff(moment(), 'days');
+                                switch (daysTillHomework) {
+                                    case 0:
+                                        daysTillHomework = 'Today';
+                                        break;
+                                    case 1:
+                                        daysTillHomework = 'Tomorrow';
+                                        break;
+                                    case 29:
+                                        daysTillHomework = 'Don\'t worry, it\' not soon';
+                                        break;
+                                    case 30:
+                                        daysTillHomework = 'Don\'t worry, it\' not soon';
+                                        break;
+                                    default:
+                                        daysTillHomework = `After ${daysTillHomework} days`;
+                                        break;
+                                }
+                                course.soonestHomework = daysTillHomework;
+                                course.homeworkCount = homeworkCount;
+                            });
                             resolve(courses);
                         });
                     });
@@ -102,7 +147,21 @@ module.exports = (models) => {
             });
 
         },
-        formatCalendar(data){
+        getUserHomewrok(courses){
+            return new Promise((resolve, reject) => {
+                let homeworkCount = 0;
+                courses.forEach(function (course) {
+                    course.lectures.forEach(function (lecture) {
+                        if (lecture.homework) {
+                            homeworkCount++;
+                        }
+                    })
+                });
+                resolve(homeworkCount);
+            })
+        },
+        formatCalendar(data)
+        {
             return new Promise((resolve, reject) => {
                 let result = [];
                 const fixedDate = '14-03-2017';
@@ -119,23 +178,32 @@ module.exports = (models) => {
                         if (moment(obj.lecture.date).day() == counter.day()) {
                             // console.log(obj.lecture.name +
                             //     ' ' + 'today ' + i);
-
+                            tmp[`name${count}`]
+                                = obj.lecture.name;
                             tmp[`start${count}`]
-                                = moment(`${fixedDate} ${obj.lecture.endHour}`, 'DD-MM-YYYY HH:mm').utc() ;
+                                = moment(`${fixedDate} ${obj.lecture.endHour}`, 'DD-MM-YYYY HH:mm').utc();
 
                             tmp[`end${count}`]
                                 = moment(`${fixedDate} ${obj.lecture.startHour}`, 'DD-MM-YYYY HH:mm').utc();
+                            tmp[`color${count}`]
+                                = obj.course.color;
                             count++;
                         }
+                        if (moment(obj.lecture.homework.deadline).day() == counter.day()) {
+                            tmp[`homework1`]
+                                = moment(`${fixedDate} 21:00`, 'DD-MM-YYYY HH:mm').utc();
+                            tmp[`homework2`]
+                                = moment(`${fixedDate} 22:00`, 'DD-MM-YYYY HH:mm').utc();
+                        }
                     });
-
                     result.push(tmp);
-                    //todo
                 }
                 resolve(result);
             })
-        },
-        getUserCalendar(username){
+        }
+        ,
+        getUserCalendar(username)
+        {
             return new Promise((resolve, reject) => {
                 let result = [];
                 this.getUserCourses(username)
@@ -145,8 +213,8 @@ module.exports = (models) => {
                                 .then(lectures => {
                                     lectures.forEach(function (lecture) {
                                         if (moment(lecture.date).isBetween(moment().day(), moment().add(5, 'days'))) {
-
                                             result.push({
+                                                course: course,
                                                 lecture: lecture
                                             });
                                         }
@@ -158,8 +226,10 @@ module.exports = (models) => {
                         resolve(result);
                     })
             })
-        },
-        uploadAvatar(username, img, password) {
+        }
+        ,
+        uploadAvatar(username, img, password)
+        {
             return new Promise((resolve, reject) => {
                 this.getByUsername(username)
                     .then(user => {
@@ -173,16 +243,20 @@ module.exports = (models) => {
                         resolve(user);
                     });
             });
-        },
-        getAvatar(username) {
+        }
+        ,
+        getAvatar(username)
+        {
             return new Promise((resolve, reject) => {
                 this.getByUsername(username)
                     .then(result => {
                         resolve(result.avatar);
                     });
             });
-        },
-        updateUserPrivateInfo(id, info) {
+        }
+        ,
+        updateUserPrivateInfo(id, info)
+        {
 
             return new Promise((resolve, reject) => {
                 Promise.all([this.getUserById(id), this.getUserByEmail(info.email)])
@@ -200,5 +274,7 @@ module.exports = (models) => {
 
             });
         }
-    };
-};
+    }
+        ;
+}
+;

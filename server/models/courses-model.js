@@ -9,9 +9,23 @@ let courseSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    order: {
+        type: Number,
+        default: 5
+    },
+    track: {
+        type: String,
+        required: true,
+    },
     color: {
         type: String,
         required: false
+    },
+    homeworkCount: {
+        type: Number
+    },
+    soonestHomework: {
+        type: String
     },
     image: {
         type: String,
