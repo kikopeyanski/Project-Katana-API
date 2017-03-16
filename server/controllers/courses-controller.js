@@ -34,7 +34,6 @@ module.exports = function ({data, encryption, grid, database}) {
         createCourse(req, res){
             let gfs = grid(database.connection.db, database.mongo);
             let body = req.body;
-            console.log(body.track);
             let file = req.file;
 
             gfs.writeFile({}, file.buffer, (_, foundFile) => {

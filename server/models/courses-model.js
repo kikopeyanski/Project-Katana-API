@@ -9,6 +9,10 @@ let courseSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    module: {
+        type: String,
+        default: 4
+    },
     order: {
         type: Number,
         default: 5

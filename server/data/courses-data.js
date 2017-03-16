@@ -24,25 +24,54 @@ let tracks = [
     }
 ];
 
+
 module.exports = function (models) {
     let Course = models.Course;
+
 
     return {
         getAllCourses: function () {
             return new Promise((resolve, reject) => {
+                let result = {
+                    firstModule: [],
+                    secondModule: [],
+                    thirdModule: [],
+                    noModule: []
+                };
                 Course.find({}, (err, courses) => {
                     if (err) {
                         return reject(err)
                     }
-                    return resolve(courses);
+                    courses.forEach(function (course) {
+
+                        console.log(course);
+                        switch (course.module) {
+                            case '1':
+                                result.firstModule.push(course);
+                                break;
+                            case '2':
+                                result.secondModule.push(course);
+                                break;
+                            case '3':
+                                result.thirdModule.push(course);
+                                break;
+                            default:
+                                result.noModule.push(course);
+                                break;
+                        }
+                    });
+
+                    return resolve(result);
                 })
             });
         },
         createCourse: function (body) {
             return new Promise((resolve, reject) => {
                 let courseName = body.name;
+                let module = body.module;
                 let track = body.track;
-                let color;
+                //default color if something happens
+                let color = '#ff0000';
                 tracks.forEach(function (tr) {
                     if (tr.name == track) {
                         color = tr.color;
@@ -53,14 +82,16 @@ module.exports = function (models) {
                 let homework = body.homework;
                 let img = body.img;
 
+
                 const course = new Course({
                     name: courseName,
                     track: track,
-                    color: color,
+                    module: module,
                     startDate: startDate,
                     endDate: endDate,
                     homework: homework,
-                    image: img
+                    image: img,
+                    color: color,
                 });
 
                 course.save((err) => {
