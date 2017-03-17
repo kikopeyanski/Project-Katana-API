@@ -169,7 +169,9 @@ module.exports = (models) => {
                 for (let i = 0; i < 5; i++) {
                     let counter = moment().add(i, 'days');
                     let tmp = {};
-                    tmp.date = weekdays[moment().get('weekday') + i - 1];
+                    tmp.date = weekdays[(moment().get('weekday') + i - 1) % 7];
+
+                    console.log(tmp.date);
 
                     let count = 1;
 
