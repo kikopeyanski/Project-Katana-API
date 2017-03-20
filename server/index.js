@@ -15,7 +15,7 @@ const grid = require('gridfs');
 const multer = require('multer');
 
 let storage = multer.memoryStorage();
-let upload = multer({storage: storage});
+      let upload = multer({storage: storage});
 
 app.use(cors());
 

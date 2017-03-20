@@ -1,63 +1,6 @@
 'use strict';
 const userDataExtractor = require('../utilities/user-data-extractor');
 
-
-// let calendar = [
-//     {
-//         "date": weekdays[moment().get('weekday') - 1],
-//         "start1": moment('14-03-2017 13:00', 'DD-MM-YYYY HH:mm'),
-//         "start2": moment('14-03-2017 13:00', 'DD-MM-YYYY HH:mm'),
-//         "start3": moment('14-03-2017 13:00', 'DD-MM-YYYY HH:mm'),
-//         "end1": moment('14-03-2017 16:00', 'DD-MM-YYYY HH:mm'),
-//         "end2": moment('14-03-2017 16:00', 'DD-MM-YYYY HH:mm'),
-//         "end3": moment('14-03-2017 16:00', 'DD-MM-YYYY HH:mm'),
-//         // "homework1": "12:00",
-//         // "homework2": "12:00",
-//     },
-//     {
-//         "date": weekdays[moment().get('weekday')],
-//         "start1": moment('14-03-2017 13:00', 'DD-MM-YYYY HH:mm'),
-//         "start2": moment('14-03-2017 13:00', 'DD-MM-YYYY HH:mm'),
-//         "start3": moment('14-03-2017 13:00', 'DD-MM-YYYY HH:mm'),
-//         "end1": moment('14-03-2017 16:00', 'DD-MM-YYYY HH:mm'),
-//         "end2": moment('14-03-2017 16:00', 'DD-MM-YYYY HH:mm'),
-//         "end3": moment('14-03-2017 16:00', 'DD-MM-YYYY HH:mm'),
-//         // "homework1": "12:00",
-//         // "homework2": "12:00",
-//     },
-//     {
-//         "date": weekdays[moment().get('weekday') + 1],
-//         "start1": moment('14-03-2017 13:00', 'DD-MM-YYYY HH:mm'),
-//         "start2": moment('14-03-2017 13:00', 'DD-MM-YYYY HH:mm'),
-//         "start3": moment('14-03-2017 13:00', 'DD-MM-YYYY HH:mm'),
-//         "end1": moment('14-03-2017 16:00', 'DD-MM-YYYY HH:mm'),
-//         "end2": moment('14-03-2017 16:00', 'DD-MM-YYYY HH:mm'),
-//         "end3": moment('14-03-2017 16:00', 'DD-MM-YYYY HH:mm'),
-//         // "homework1": "12:00",
-//         // "homework2": "12:00",
-//     }, {
-//         "date": weekdays[moment().get('weekday') + 2],
-//         "start1": moment('14-03-2017 13:00', 'DD-MM-YYYY HH:mm'),
-//         "start2": moment('14-03-2017 13:00', 'DD-MM-YYYY HH:mm'),
-//         "start3": moment('14-03-2017 13:00', 'DD-MM-YYYY HH:mm'),
-//         "end1": moment('14-03-2017 16:00', 'DD-MM-YYYY HH:mm'),
-//         "end2": moment('14-03-2017 16:00', 'DD-MM-YYYY HH:mm'),
-//         "end3": moment('14-03-2017 16:00', 'DD-MM-YYYY HH:mm'),
-//         // "homework1": "12:00",
-//         // "homework2": "12:00",
-//     }, {
-//         "date": weekdays[moment().get('weekday') + 3],
-//         "start1": moment('14-03-2017 13:00', 'DD-MM-YYYY HH:mm'),
-//         "start2": moment('14-03-2017 13:00', 'DD-MM-YYYY HH:mm'),
-//         "start3": moment('14-03-2017 13:00', 'DD-MM-YYYY HH:mm'),
-//         "end1": moment('14-03-2017 16:00', 'DD-MM-YYYY HH:mm'),
-//         "end2": moment('14-03-2017 16:00', 'DD-MM-YYYY HH:mm'),
-//         "end3": moment('14-03-2017 16:00', 'DD-MM-YYYY HH:mm'),
-//         // "homework1": "12:00",
-//         // "homework2": "12:00",
-//     },
-// ];
-
 module.exports = function ({data, encryption}) {
     return {
         _validateToken(req, res) {
@@ -107,7 +50,6 @@ module.exports = function ({data, encryption}) {
 
         },
         addCourseToUser(req, res){
-            console.log('add course');
             let username = req.params.username;
             let courseId = req.body.id;
 
@@ -118,6 +60,15 @@ module.exports = function ({data, encryption}) {
                 })
 
 
+        },
+        removeCourseFromUser(req, res){
+            let username = req.params.username;
+            let courseId = req.body.id;
+
+            data.removeCourseFromUser(username, courseId)
+                .then(result=>{
+                    res.status(200).json(result);
+                })
         },
         // updatePrivateInfo(req, res) {
         //     if (!req.user) {

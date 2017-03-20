@@ -38,13 +38,12 @@ module.exports = function (models) {
                     thirdModule: [],
                     noModule: []
                 };
+
                 Course.find({}, (err, courses) => {
                     if (err) {
                         return reject(err)
                     }
                     courses.forEach(function (course) {
-
-                        console.log(course);
                         switch (course.module) {
                             case '1':
                                 result.firstModule.push(course);
@@ -68,6 +67,7 @@ module.exports = function (models) {
         createCourse: function (body) {
             return new Promise((resolve, reject) => {
                 let courseName = body.name;
+                let description = body.description;
                 let module = body.module;
                 let track = body.track;
                 //default color if something happens
@@ -85,13 +85,14 @@ module.exports = function (models) {
 
                 const course = new Course({
                     name: courseName,
+                    description: description,
                     track: track,
                     module: module,
                     startDate: startDate,
                     endDate: endDate,
                     homework: homework,
                     image: img,
-                    color: color,
+                    color: color
                 });
 
                 course.save((err) => {
@@ -122,6 +123,21 @@ module.exports = function (models) {
                     course.lectures.push(lecture);
                     course.save();
                     resolve('success');
+                })
+            })
+        },
+        addComment(id, user, content){
+            return new Promise((resolve, reject) => {
+                Course.findOne({_id: id}, (err, course) => {
+                    console.log(content);
+                    let comment = {
+                        user: user,
+                        content: content,
+                        date: Date.now()
+                    };
+                    course.comments.push(comment);
+                    course.save();
+                    resolve(comment);
                 })
             })
         }

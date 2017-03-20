@@ -86,10 +86,32 @@ module.exports = (models) => {
             return new Promise((resolve, reject) => {
                 this.getByUsername(username)
                     .then(user => {
-                        user.courses.push(courseId);
-                        user.save();
-                        resolve(user);
+                        if (user.courses.indexOf(courseId) == -1) {
+
+                            user.courses.push(courseId);
+                            user.save();
+
+                            Course.findOne({_id: courseId}, (err, course) => {
+                                course.studentsSigned += 1;
+                                course.save();
+                            });
+                            resolve(user);
+                        } else {
+                            reject('user is already signed for this course');
+                        }
                     });
+            })
+        },
+        removeCourseFromUser(username, courseId){
+            return new Promise((resolve, reject) => {
+                this.getByUsername(username)
+                    .then(user => {
+                        let indexOfCourse = user.courses.indexOf(courseId);
+                        user.courses.splice(indexOfCourse, 1);
+                        user.save();
+
+                        resolve(`${courseId} successfully unsigned`);
+                    })
             })
         },
         getUserCourses(username) {
@@ -170,8 +192,7 @@ module.exports = (models) => {
                     let counter = moment().add(i, 'days');
                     let tmp = {};
                     tmp.date = weekdays[(moment().get('weekday') + i - 1) % 7];
-
-                    console.log(tmp.date);
+                    
 
                     let count = 1;
 

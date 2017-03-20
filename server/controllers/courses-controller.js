@@ -1,5 +1,6 @@
 'use strict';
 const userDataExtractor = require('../utilities/user-data-extractor');
+const moment = require('moment');
 
 module.exports = function ({data, encryption, grid, database}) {
     return {
@@ -67,23 +68,21 @@ module.exports = function ({data, encryption, grid, database}) {
                     console.log(response);
                 });
 
-        }
-        // getFactComments(req, res) {
-        //     let id = req.params.id;
-        //
-        //     data.getFactComments(id)
-        //         .then(result => {
-        //             return res.status(200).json(result)
-        //         });
-        // },
-        // addComment(req, res) {
-        //     let id = req.params.id;
-        //     let comment = req.body.comment;
-        //
-        //
-        //     data.addComment(id, comment);
-        //     return res.json(comment);
-        // },
+        },
+        addComment(req, res) {
+            let id = req.params.id;
+            let user = {
+                name: req.user.username,
+                avatar: req.user.image
+            };
+            let content = req.body.commentText;
+
+            data.addComment(id, user, content)
+                .then(response => {
+                    res.status(200).json(response);
+                })
+
+        },
         // rateFact(req, res) {
         //     let id = req.params.id;
         //     let user = req.user;

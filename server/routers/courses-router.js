@@ -23,6 +23,7 @@ module.exports = function ({app, controllers, passport, auth, upload}) {
         .post('/upload', upload.single('image'), courses.createCourse)
         .put('/course/:id',auth.isAuthenticated(), courses.addLectureToCourse)
         .get('/course/:id', auth.isAuthenticated(), courses.getCourseById)
+        .post('/course/:id/comments', auth.isAuthenticated(),courses.addComment)
         .get('/all', auth.isAuthenticated(), courses.getAllCourses);
 
     app.use('/courses', router);

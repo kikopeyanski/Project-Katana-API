@@ -9,6 +9,18 @@ let courseSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    description: {
+        type: String,
+        default: 'No info for this course'
+    },
+    startDate: {
+        type: Date,
+        required: true
+    },
+    endDate: {
+        type: Date,
+        required: true
+    },
     module: {
         type: String,
         default: 4
@@ -45,6 +57,25 @@ let courseSchema = new mongoose.Schema({
                 name: String,
                 deadline: Date
             }
+        }],
+        default: []
+    },
+    studentsSigned: {
+        type: Number,
+        default: 0
+    },
+    studentsLimit: {
+        type: Number,
+        default: 150
+    },
+    comments: {
+        type: [{
+            user: {
+                name: String,
+                avatar: String
+            },
+            content: String,
+            date: Date
         }]
     }
 });
