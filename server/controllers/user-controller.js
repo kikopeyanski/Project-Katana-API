@@ -66,56 +66,56 @@ module.exports = function ({data, encryption}) {
             let courseId = req.body.id;
 
             data.removeCourseFromUser(username, courseId)
-                .then(result=>{
+                .then(result => {
                     res.status(200).json(result);
                 })
         },
-        // updatePrivateInfo(req, res) {
-        //     if (!req.user) {
-        //         res.status(401).json({
-        //             succes: false,
-        //             message: 'Please enter your credentials'
-        //         });
-        //         return;
-        //     }
-        //
-        //     let user = req.user;
-        //     let userHash = req.user.passHash;
-        //
-        //     let hashedEnteredPassword = user.generatePassHash(req.body.currentPassword);
-        //     if (userHash !== hashedEnteredPassword) {
-        //         res.status(401).json({
-        //             succes: false,
-        //             message: 'Please enter valid credentials'
-        //         });
-        //         return;
-        //     }
-        //
-        //     let newUserHash = false;
-        //
-        //     if (req.body.newPassword) {
-        //         newUserHash = user.generatePassHash(req.body.newPassword);
-        //     }
-        //
-        //     let infoToUpdate = {
-        //         email: req.body.email,
-        //         passHash: newUserHash
-        //     };
-        //
-        //     data.updateUserPrivateInfo(user._id, infoToUpdate)
-        //         .then(result => {
-        //             res.status(201).json({
-        //                 succes: true,
-        //                 message: 'Userinfo has been updated successfullyF'
-        //             });
-        //         })
-        //         .catch(err => {
-        //             res.status(400).json({
-        //                 succes: false,
-        //                 message: 'User with the same email already exists!'
-        //             });
-        //         });
-        // },
+        updatePrivateInfo(req, res) {
+            if (!req.user) {
+                res.status(401).json({
+                    succes: false,
+                    message: 'Please enter your credentials'
+                });
+                return;
+            }
+
+            let user = req.user;
+            let userHash = req.user.passHash;
+
+            let hashedEnteredPassword = user.generatePassHash(req.body.currentPassword);
+            if (userHash !== hashedEnteredPassword) {
+                res.status(401).json({
+                    succes: false,
+                    message: 'Please enter valid credentials'
+                });
+                return;
+            }
+
+            let newUserHash = false;
+
+            if (req.body.newPassword) {
+                newUserHash = user.generatePassHash(req.body.newPassword);
+            }
+
+            let infoToUpdate = {
+                email: req.body.email,
+                passHash: newUserHash
+            };
+
+            data.updateUserPrivateInfo(user._id, infoToUpdate)
+                .then(result => {
+                    res.status(201).json({
+                        succes: true,
+                        message: 'Userinfo has been updated successfullyF'
+                    });
+                })
+                .catch(err => {
+                    res.status(400).json({
+                        succes: false,
+                        message: 'User with the same email already exists!'
+                    });
+                });
+        },
         // uploadAvatar(req, res, img) {
         //     this._validateToken(req, res);
         //

@@ -24,7 +24,8 @@ module.exports = function ({app, controllers, passport, auth}) {
     router
         .get('/user/:username/courses', auth.isAuthenticated(), user.getUserCourses)
         .post('/user/:username/courses',user.addCourseToUser)
-        .put('/user/:username/courses/remove',user.removeCourseFromUser);
+        .put('/user/:username/courses/remove',user.removeCourseFromUser)
+        .put('/user/:username/settings',auth.isAuthenticated(),user.updatePrivateInfo);
 
     app.use('/api/users', router);
     //  .get('/user/:username/avatar', auth.isAuthenticated(), userController.getAvatar)
