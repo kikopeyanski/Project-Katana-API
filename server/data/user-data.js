@@ -192,7 +192,7 @@ module.exports = (models) => {
                     let counter = moment().add(i, 'days');
                     let tmp = {};
                     tmp.date = weekdays[(moment().get('weekday') + i - 1) % 7];
-                    
+
 
                     let count = 1;
 
@@ -261,7 +261,7 @@ module.exports = (models) => {
                             return reject();
                         }
 
-                        user.avatar = img;
+                        user.image = img;
                         user.save();
                         resolve(user);
                     });

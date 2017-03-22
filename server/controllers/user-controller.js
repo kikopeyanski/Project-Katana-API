@@ -1,7 +1,7 @@
 'use strict';
 const userDataExtractor = require('../utilities/user-data-extractor');
 
-module.exports = function ({data, encryption}) {
+module.exports = function ({data, encryption, grid, database}) {
     return {
         _validateToken(req, res) {
             let token = req.headers.authorization;
@@ -116,31 +116,38 @@ module.exports = function ({data, encryption}) {
                     });
                 });
         },
-        // uploadAvatar(req, res, img) {
-        //     this._validateToken(req, res);
-        //
-        //     let username = req.body.username;
-        //     let passwordFromReq = req.body.currentPassword;
-        //
-        //     if (!passwordFromReq) {
-        //         res.status(401).json({
-        //             succes: false,
-        //             message: 'Password is not valid'
-        //         });
-        //     }
-        //
-        //     data.uploadAvatar(username, img, passwordFromReq)
-        //         .then(user => {
-        //             res.status(200).send(img);
-        //         })
-        //         .catch((err) => {
-        //             res.status(401).json({
-        //                 succes: false,
-        //                 message: 'Password is not valid'
-        //             });
-        //         });
-        //
-        // },
+        uploadAvatar(req, res) {
+            let username = req.params.username;
+            let passwordFromReq = req.body.password;
+
+            if (!passwordFromReq) {
+                res.status(401).json({
+                    succes: false,
+                    message: 'Password is not valid'
+                });
+            }
+
+            let gfs = grid(database.connection.db, database.mongo);
+            let file = req.file;
+            let img;
+
+            gfs.writeFile({}, file.buffer, (_, foundFile) => {
+                img = foundFile._id;
+
+                data.uploadAvatar(username, img, passwordFromReq)
+                    .then(user => {
+                        res.status(200).json(user.image);
+                    })
+                    .catch((err) => {
+                        res.status(401).json({
+                            succes: false,
+                            message: 'Password is not valid'
+                        });
+                    });
+            });
+
+
+        },
         // getAvatar(req, res) {
         //     let username = req.params.username;
         //

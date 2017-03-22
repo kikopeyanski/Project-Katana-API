@@ -25,7 +25,7 @@ module.exports = function ({data, encryption, grid, database}) {
                         message: `User ${user.username} logged in succesfully`,
                         token: 'JWT ' + token,
                         isUserBlocked: user.isBlocked,
-                        isAdmin: user.roles.indexOf('admin')!=-1,
+                        isAdmin: user.roles.indexOf('admin') != -1,
                         username: user.username,
                         image: user.image,
                         id: user._id
@@ -34,7 +34,6 @@ module.exports = function ({data, encryption, grid, database}) {
 
         },
         register(req, res) {
-
 
             if (req.body === null || typeof (req.body) === 'undefined') {
                 return res.status(401).json({success: false, message: 'request body is empty'});
@@ -102,7 +101,6 @@ module.exports = function ({data, encryption, grid, database}) {
                             });
                     });
             });
-
 
         },
         logout(req, res) {
