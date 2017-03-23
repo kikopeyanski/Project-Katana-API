@@ -50,11 +50,59 @@ module.exports = function ({data, encryption, grid, database}) {
 
             let file = req.file;
             let img;
+            if (file) {
+                gfs.writeFile({}, file.buffer, (_, foundFile) => {
+                    img = foundFile._id;
 
-            gfs.writeFile({}, file.buffer, (_, foundFile) => {
-                img = foundFile._id;
+
+                    if (password.length < 4) {
+                        return res.status(401).json({success: false, message: 'Password too short'});
+
+                    }
 
 
+                    if (password !== confirmedPassword) {
+                        return res.status(401).json({success: false, message: 'Passwords do not match'});
+
+                    }
+
+                    let pattern = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+                    if (!pattern.test(email)) {
+                        return res.status(401).json({success: false, message: 'Email is not valid'});
+
+                    }
+
+                    const salt = encryption.generateSalt();
+                    const passHash = encryption.generateHashedPassword(salt, password);
+
+                    Promise.all([data.getByUsername(username), data.getUserByEmail(email)])
+                        .then(([existringUser, existingEmail]) => {
+
+                            if (existringUser) {
+                                return res.status(409).json({
+                                    success: false,
+                                    message: 'Username already exist!'
+                                });
+
+                            } else if (existingEmail) {
+                                return res.status(409).json({
+                                    success: false,
+                                    message: 'Email already exist!'
+                                });
+
+                            }
+
+                            data.createUser(username, passHash, email, salt, img)
+                                .then(() => {
+                                    return res.status(201).json({
+                                        success: true,
+                                        message: `User ${username} created succesfully`
+                                    });
+                                });
+                        });
+                });
+            }else {
+                img = '58d3b557d49a1a30ccb33b49';
                 if (password.length < 4) {
                     return res.status(401).json({success: false, message: 'Password too short'});
 
@@ -100,7 +148,8 @@ module.exports = function ({data, encryption, grid, database}) {
                                 });
                             });
                     });
-            });
+            }
+
 
         },
         logout(req, res) {
