@@ -27,6 +27,7 @@ let tracks = [
 
 module.exports = function (models) {
     let Course = models.Course;
+    let User = models.User;
 
 
     return {
@@ -109,7 +110,7 @@ module.exports = function (models) {
                 let result = {};
                 result.course = {};
 
-                result.isSigned = userCourses.indexOf(id) != -1;
+                result.isSigned = userCourses.indexOf(id) !== -1;
 
                 Course.findOne({_id: id}, (err, course) => {
                     result.course = course;
@@ -122,6 +123,22 @@ module.exports = function (models) {
                 Course.findOne({_id: id}, (err, course) => {
                     course.lectures.push(lecture);
                     course.save();
+                    User.find({courses: id}, (err, users) => {
+                        users.forEach(function (user) {
+                            let notification = {
+                                lectureName: lecture.name,
+                                course: course.name,
+                                courseId: id,
+                                content: `Lecutre ${lecture.name} was added to course ${course.name}`,
+                                date: Date.now(),
+                                seen: false
+                            };
+                            user.notifications.push(notification);
+                            user.save();
+                        })
+
+                    });
+
                     resolve('success');
                 })
             })
@@ -129,7 +146,6 @@ module.exports = function (models) {
         addComment(id, user, content){
             return new Promise((resolve, reject) => {
                 Course.findOne({_id: id}, (err, course) => {
-                    console.log(content);
                     let comment = {
                         user: user,
                         content: content,

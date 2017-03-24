@@ -101,7 +101,7 @@ module.exports = function ({data, encryption, grid, database}) {
                                 });
                         });
                 });
-            }else {
+            } else {
                 img = '58d3b557d49a1a30ccb33b49';
                 if (password.length < 4) {
                     return res.status(401).json({success: false, message: 'Password too short'});
@@ -172,7 +172,11 @@ module.exports = function ({data, encryption, grid, database}) {
                 image: req.user.image,
                 _id: req.user._id,
                 roles: req.user.roles,
-                isBlocked: req.user.isBlocked
+                isBlocked: req.user.isBlocked,
+                notifications: req.user.notifications.filter(function (notification) {
+                    return !notification.seen;
+
+                })
             };
 
             return res.status(200).json(user);

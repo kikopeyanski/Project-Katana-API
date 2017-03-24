@@ -8,6 +8,7 @@ module.exports = {
             courses: req.user.courses,
             isBlocked: req.user.isBlocked,
             isAdmin: req.user.roles.indexOf('admin') != -1,
+            notifications: req.user.notifications
         }
     }
 };

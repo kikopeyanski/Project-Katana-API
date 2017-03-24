@@ -11,7 +11,8 @@ module.exports = function ({app, controllers, passport, auth,upload}) {
         .post('/user/:username/courses',user.addCourseToUser)
         .put('/user/:username/courses/remove',user.removeCourseFromUser)
         .put('/user/:username/settings',auth.isAuthenticated(),user.updatePrivateInfo)
-        .post('/user/:username/settings/avatar',auth.isAuthenticated(),upload.single('image'), user.uploadAvatar);
+        .post('/user/:username/settings/avatar',auth.isAuthenticated(),upload.single('image'), user.uploadAvatar)
+        .post('/user/:username/notifications',user.notificationSeen);
     app.use('/api/users', router);
     //  .get('/user/:username/avatar', auth.isAuthenticated(), userController.getAvatar)
     //   .post('/user/avatar', uploadAvatar.any(), (req, res) => {

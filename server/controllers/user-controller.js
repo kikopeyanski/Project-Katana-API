@@ -148,6 +148,13 @@ module.exports = function ({data, encryption, grid, database}) {
 
 
         },
+        notificationSeen(req, res){
+            let username = req.params.username;
+            let id = req.body.id;
+
+            data.notificationSeen(username, id)
+                .then(res.status(200).json('success'))
+        }
         // getAvatar(req, res) {
         //     let username = req.params.username;
         //

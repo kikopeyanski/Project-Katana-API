@@ -62,7 +62,17 @@ const userSchema = new mongoose.Schema({
     courses: [{
         type: String,
         unique: true
-    }]
+    }],
+    notifications: {
+        type: [{
+            course: String,
+            lectureName: String,
+            courseId: String,
+            content: String,
+            date: Date,
+            seen: Boolean
+        }]
+    }
 });
 
 

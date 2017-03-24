@@ -123,7 +123,7 @@ module.exports = (models) => {
                             coursesIds.push(courseId);
                         });
 
-                        Course.find({'_id': {$in: coursesIds}}, (err, courses) => {
+                        Course.find({'_id': {$in: coursesIds}}).sort({startDate: '-1'}).limit(4).exec((err, courses) => {
                             courses.forEach(function (course) {
                                 let homeworkCount = 0;
                                 let soonestHomework = moment().add(30, 'days');
@@ -296,8 +296,21 @@ module.exports = (models) => {
                     });
 
             });
+        },
+        notificationSeen(username, id){
+            return new Promise((resolve, reject) => {
+                this.getByUsername(username)
+                    .then(user => {
+                        user.notifications.forEach(function (notification) {
+                            if (notification._id == id) {
+                                notification.seen = true;
+                                user.save();
+                                resolve();
+                            }
+
+                        })
+                    })
+            })
         }
-    }
-        ;
-}
-;
+    };
+};
