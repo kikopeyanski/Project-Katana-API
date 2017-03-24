@@ -8,6 +8,14 @@ const cors = require('cors');
 module.exports = (config, app) => {
     // server client folder bower etc...
     //app.use('/static', express.static(config.rootPath + '/public'));
+    app.use(function (req, res, next) {
+        res.header('Access-Control-Allow-Origin', '*');
+        res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+        res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+        res.setHeader('Access-Control-Allow-Credentials', true);
+
+        next();
+    });
 
     app.use(cookieParser());
     app.use(session({
@@ -19,14 +27,6 @@ module.exports = (config, app) => {
         saveUninitialized: false
     }));
 
-    app.use(function (req, res, next) {
-        res.header('Access-Control-Allow-Origin', '*');
-        res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
-        res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
-        res.setHeader('Access-Control-Allow-Credentials', true);
-        
-        next();
-    });
 
     app.options('*', cors());
     require('./passport')(app);
