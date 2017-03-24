@@ -12,8 +12,8 @@ module.exports = {
     },
     production: {
         rootPath: rootPath,
-        connectionString: process.env.CONNECTION_STRING,
+        connectionString: 'mongodb://admin:admin@ds141450.mlab.com:41450/katanadb',
         port: PORT,
-        secret: process.env.JWT_SECRET
+        secret:'magicstring'
     }
 };
