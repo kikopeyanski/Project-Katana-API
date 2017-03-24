@@ -6,7 +6,7 @@ module.exports = {
     development: {
         rootPath: rootPath,
         //connectionString: 'mongodb://Admin:junkies1234@ds141098.mlab.com:41098/funfact-project',
-        connectionString: 'mongodb://localhost:27017/KatanaDb', //use this if you are in the holy Academy
+        connectionString: 'mongodb://admin:admin@ds141450.mlab.com:41450/katanadb', //use this if you are in the holy Academy
         port: PORT,
         secret: 'magicstring'
     },
