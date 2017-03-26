@@ -77,6 +77,10 @@ let courseSchema = new mongoose.Schema({
             content: String,
             date: Date
         }]
+    },
+    isActive:{
+        type: Boolean,
+        default: false
     }
 });
 

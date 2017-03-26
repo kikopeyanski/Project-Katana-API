@@ -8,6 +8,7 @@ module.exports = function ({app, controllers, passport, auth,upload}) {
 
     router
         .get('/user/:username/courses', auth.isAuthenticated(), user.getUserCourses)
+        .get('/user/:username/calendar', auth.isAuthenticated(), user.getUserCalendar)
         .post('/user/:username/courses',user.addCourseToUser)
         .put('/user/:username/courses/remove',user.removeCourseFromUser)
         .put('/user/:username/settings',auth.isAuthenticated(),user.updatePrivateInfo)

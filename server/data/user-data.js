@@ -249,8 +249,29 @@ module.exports = (models) => {
                         resolve(result);
                     })
             })
-        }
-        ,
+        },
+        getUserFullCalendar(username){
+            return new Promise((resolve, reject) => {
+                let result = [];
+                this.getUserCourses(username)
+                    .then(courses => {
+                        courses.forEach(function (course) {
+                            getCourseLectures(course)
+                                .then(lectures => {
+                                    lectures.forEach(function (lecture) {
+                                        result.push({
+                                            course: course,
+                                            lecture: lecture
+                                        });
+                                    })
+                                })
+                        });
+                    })
+                    .then(() => {
+                        resolve(result);
+                    })
+            })
+        },
         uploadAvatar(username, img, password)
         {
             return new Promise((resolve, reject) => {

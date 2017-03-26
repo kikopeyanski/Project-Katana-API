@@ -1,6 +1,7 @@
 /*globals module Promise*/
 'use strict';
 //const helper = require('../utils/helper');
+const moment = require('moment');
 let tracks = [
     {
         name: 'Web Frond-End Development',
@@ -24,6 +25,9 @@ let tracks = [
     }
 ];
 
+let checkIfActive = function (course) {
+    return moment().isBetween(moment(course.startDate), moment(course.endDate));
+};
 
 module.exports = function (models) {
     let Course = models.Course;
@@ -45,6 +49,8 @@ module.exports = function (models) {
                         return reject(err)
                     }
                     courses.forEach(function (course) {
+                        course.isActive = checkIfActive(course);
+                        course.save();
                         switch (course.module) {
                             case '1':
                                 result.firstModule.push(course);
@@ -59,6 +65,7 @@ module.exports = function (models) {
                                 result.noModule.push(course);
                                 break;
                         }
+                        console.log(course.isActive);
                     });
 
                     return resolve(result);

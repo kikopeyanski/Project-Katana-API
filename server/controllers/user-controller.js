@@ -49,6 +49,20 @@ module.exports = function ({data, encryption, grid, database}) {
                 })
 
         },
+        getUserCalendar(req, res){
+            let username = req.params.username;
+            let calendar;
+            data.getUserFullCalendar(username)
+                .then(result => {
+                    res.status(200).json({
+                        calendar: result
+                    })
+                })
+                .catch(err => {
+                    res.status(404).json(err);
+                })
+
+        },
         addCourseToUser(req, res){
             let username = req.params.username;
             let courseId = req.body.id;
