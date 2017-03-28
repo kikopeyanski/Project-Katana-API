@@ -214,9 +214,9 @@ module.exports = (models) => {
                         }
                         if (moment(obj.lecture.homework.deadline).day() == counter.day()) {
                             tmp[`homework1`]
-                                = moment(`${fixedDate} 21:00`, 'DD-MM-YYYY HH:mm').utc();
+                                = moment(`${fixedDate} 19:00`, 'DD-MM-YYYY HH:mm').utc();
                             tmp[`homework2`]
-                                = moment(`${fixedDate} 22:00`, 'DD-MM-YYYY HH:mm').utc();
+                                = moment(`${fixedDate} 20:00`, 'DD-MM-YYYY HH:mm').utc();
                         }
                     });
                     result.push(tmp);
