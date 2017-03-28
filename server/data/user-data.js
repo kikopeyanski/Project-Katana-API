@@ -192,22 +192,18 @@ module.exports = (models) => {
                     let counter = moment().add(i, 'days');
                     let tmp = {};
                     tmp.date = weekdays[(moment().get('weekday') + i - 1) % 7];
-
-
                     let count = 1;
 
 
                     data.forEach(function (obj) {
                         if (moment(obj.lecture.date).day() == counter.day()) {
-                            // console.log(obj.lecture.name +
-                            //     ' ' + 'today ' + i);
                             tmp[`name${count}`]
                                 = obj.lecture.name;
                             tmp[`start${count}`]
-                                = moment(`${fixedDate} ${obj.lecture.endHour}`, 'DD-MM-YYYY HH:mm');
+                                = moment(`${fixedDate} ${obj.lecture.endHour}`, 'DD-MM-YYYY HH:mm').subtract(2, 'hours');
 
                             tmp[`end${count}`]
-                                = moment(`${fixedDate} ${obj.lecture.startHour}`, 'DD-MM-YYYY HH:mm');
+                                = moment(`${fixedDate} ${obj.lecture.startHour}`, 'DD-MM-YYYY HH:mm').subtract(2, 'hours');
                             tmp[`color${count}`]
                                 = obj.course.color;
                             count++;
