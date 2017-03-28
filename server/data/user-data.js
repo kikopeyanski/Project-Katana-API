@@ -186,7 +186,7 @@ module.exports = (models) => {
         {
             return new Promise((resolve, reject) => {
                 let result = [];
-                const fixedDate = '14-03-2017';
+                const fixedDate = '28-03-2017';
 
                 for (let i = 0; i < 5; i++) {
                     let counter = moment().add(i, 'days');
@@ -204,10 +204,10 @@ module.exports = (models) => {
                             tmp[`name${count}`]
                                 = obj.lecture.name;
                             tmp[`start${count}`]
-                                = moment(`${fixedDate} ${obj.lecture.endHour}`, 'DD-MM-YYYY HH:mm').utc();
+                                = moment(`${fixedDate} ${obj.lecture.endHour}`, 'DD-MM-YYYY HH:mm');
 
                             tmp[`end${count}`]
-                                = moment(`${fixedDate} ${obj.lecture.startHour}`, 'DD-MM-YYYY HH:mm').utc();
+                                = moment(`${fixedDate} ${obj.lecture.startHour}`, 'DD-MM-YYYY HH:mm');
                             tmp[`color${count}`]
                                 = obj.course.color;
                             count++;
