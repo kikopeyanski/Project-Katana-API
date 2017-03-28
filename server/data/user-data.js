@@ -186,7 +186,7 @@ module.exports = (models) => {
         {
             return new Promise((resolve, reject) => {
                 let result = [];
-                const fixedDate = '28-03-2017';
+                const fixedDate = '14-03-2017';
 
                 for (let i = 0; i < 5; i++) {
                     let counter = moment().add(i, 'days');
