@@ -1,1 +1,0 @@
-# Server made with Nodejs(Express) for the Funfact app
